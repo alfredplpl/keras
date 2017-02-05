@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 
-setup(name='Keras',
+setup(name='KerasKai',
       version='1.2.1',
       description='Deep Learning for Python',
       author='Francois Chollet',

@@ -820,6 +820,10 @@ class DirectoryIterator(Iterator):
     def next(self):
         with self.lock:
             index_array, current_index, current_batch_size = next(self.index_generator)
+        
+        # added
+        fnames=[]
+        
         # The transformation of images is not under thread lock
         # so it can be done in parallel
         batch_x = np.zeros((current_batch_size,) + self.image_shape)
@@ -827,6 +831,8 @@ class DirectoryIterator(Iterator):
         # build batch of image data
         for i, j in enumerate(index_array):
             fname = self.filenames[j]
+            fnames.append((i,os.path.basename(fname)))
+            print("Now Loading:"+str(i)+","+os.path.basename(fname))
             img = load_img(os.path.join(self.directory, fname),
                            grayscale=grayscale,
                            target_size=self.target_size)
@@ -853,5 +859,5 @@ class DirectoryIterator(Iterator):
             for i, label in enumerate(self.classes[index_array]):
                 batch_y[i, label] = 1.
         else:
-            return batch_x
-        return batch_x, batch_y
+            return batch_x,None,fnames
+        return batch_x, batch_y,fnames
